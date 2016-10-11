@@ -401,13 +401,13 @@
                                     onRenderFcts.push(function(){
                                         var domElement	= videoGrabbing.domElement;
                                         var markers	= jsArucoMarker.detectMarkers(domElement);
-                                        var object3d	= scene;
-                                        object3d.visible = false;
+                                        var object3d	= camera;
+                                        //object3d.visible = false;
                                         // see if this.markerId has been found
                                         markers.forEach(function(marker){
                                             // if( marker.id !== 265 )	return
                                             jsArucoMarker.markerToObject3D(marker, object3d);
-                                            object3d.visible = true;
+                                            //object3d.visible = true;
                                         });
                                     });
 
