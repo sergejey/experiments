@@ -288,24 +288,6 @@
         }
 
 
-        $(document).ready(function(){
-            if (inIframe) {
-                if (typeof window.parent.setBackgroundStyle!=='undefined') {
-                    if ($('#scene_wallpaper_3').css('background-image')!='') {
-                        $('body').css('background-color', 'transparent');
-                        window.parent.$('body').css('background-image', $('#scene_wallpaper_3').css('background-image'));
-                        window.parent.$('body').css('background-attachment', $('#scene_wallpaper_3').css('background-attachment'));
-                        window.parent.$('body').css('background-repeat', $('#scene_wallpaper_3').css('background-repeat'));
-                        $('#scene_wallpaper_3').css('background-image', '');
-                    }
-                }
-            }
-
-            checkAllStates();
-
-        });
-
-
     </script>
 
 
