@@ -10,6 +10,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
 
+    <!-- include js-aruco -->
+    <script src='./threex/vendor/js-aruco/svd.js'></script>
+    <script src='./threex/vendor/js-aruco/posit1-patched.js'></script>
+    <script src='./threex/vendor/js-aruco/cv.js'></script>
+    <script src='./threex/vendor/js-aruco/aruco.js'></script>
+
+    <!-- include some extensions -->
+    <script src='./threex/threex.webcamgrabbing.js'></script>
+    <script src='./threex/threex.imagegrabbing.js'></script>
+    <script src='./threex/threex.videograbbing.js'></script>
+    <script src='./threex/threex.jsarucomarker.js'></script>
 
 </head>
 
@@ -299,24 +310,6 @@
 
 
 
-    <table  border="0" align="center" width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <td valign="top">
-                <div style=";position:relative;">
-                    <div id="slider">
-                        <div id="scene_wallpaper_3">
-                            <div id="scene_background_3" style="position:relative;">
-
-
-
-                                <!-- element  -->
-
-                                <div
-                                        class="element_12 type_s3d style_default state_"
-                                        id='canvas_12'
-                                        style="
-   background-color:red;
-   position:absolute;left:0px;top:0px;   z-index:6;   width:369px;height:300px;   display:inline-block;"></div>
 
                                 <script language="javascript" src="./js/threejs/libs/tween.min.js"></script>
                                 <script language="javascript" src="./js/threejs/three.min.js"></script>
@@ -331,16 +324,19 @@
                                     var clock = new THREE.Clock();
                                     var objects = [];
 
+                                    // array of functions for the rendering loop
+                                    var onRenderFcts = [];
+
                                     var container = document.getElementById('canvas_12');
                                     var camera = new THREE.PerspectiveCamera( 75, 369/300, 0.1, 1000 );
                                     var default_camera = new THREE.PerspectiveCamera( 75, 369/300, 0.1, 1000 );
 
-                                    var renderer = new THREE.WebGLRenderer();
-                                    renderer.setSize( 369, 300 );
-                                    renderer.domElement.style.position = "relative";
-                                    container.appendChild( renderer.domElement );
-                                    renderer.gammaInput = true;
-                                    renderer.gammaOutput = true;
+                                    var renderer	= new THREE.WebGLRenderer({
+                                        antialias	: true,
+                                        alpha		: true,
+                                    });
+                                    renderer.setSize( window.innerWidth, window.innerHeight );
+                                    document.body.appendChild( renderer.domElement );
 
                                     var scene = new THREE.Scene();
 
@@ -363,31 +359,36 @@
                                                     loaded.currentCamera.updateProjectionMatrix();
                                                     default_camera=loaded.currentCamera;
                                                     camera = default_camera.clone();
-                                                    /*
-                                                     var old_position = new THREE.Vector3();
-                                                     old_position.setFromMatrixPosition( camera.matrix );
-                                                     camera.matrixAutoUpdate = true;
-                                                     camera.position.setX(old_position.x);
-                                                     camera.position.setY(old_position.y);
-                                                     camera.position.setZ(old_position.z);
-                                                     */
-
                                                 }
 
                                             }
                                     );
 
+                                    window.addEventListener('resize', function(){
+                                        renderer.setSize( window.innerWidth, window.innerHeight );
+                                        camera.aspect	= window.innerWidth / window.innerHeight;
+                                        camera.updateProjectionMatrix();
+                                    }, false);
 
-                                    function render() {
-                                        requestAnimationFrame( render );
+
+                                    // render the scene
+                                    onRenderFcts.push(function(){
                                         renderer.render( scene, camera );
                                         TWEEN.update();
-                                    }
+                                    })
 
 
-                                    render();
+                                    // run the rendering loop
+                                    var previousTime = performance.now();
+                                    requestAnimationFrame(function animate(now){
+                                        requestAnimationFrame( animate );
+                                        onRenderFcts.forEach(function(onRenderFct){
+                                            onRenderFct(now, now - previousTime);
+                                        });
+                                        previousTime	= now
+                                    });
 
-
+/*
                                     // projector
                                     raycaster = new THREE.Raycaster();
 
@@ -407,18 +408,29 @@
                                             console.log('Clicked on '+intersects[0].object.name);
                                         }
                                     }
+                                    */
 
+                                    var jsArucoMarker	= new THREEx.JsArucoMarker();
+                                    jsArucoMarker.videoScaleDown = 2;
+                                    document.body.appendChild(videoGrabbing.domElement);
+
+                                    // process the image source with the marker recognition
+                                    onRenderFcts.push(function(){
+                                        var domElement	= videoGrabbing.domElement;
+                                        var markers	= jsArucoMarker.detectMarkers(domElement);
+                                        var object3d	= scene;
+                                        object3d.visible = false;
+                                        // see if this.markerId has been found
+                                        markers.forEach(function(marker){
+                                            // if( marker.id !== 265 )	return
+                                            jsArucoMarker.markerToObject3D(marker, object3d);
+                                            object3d.visible = true;
+                                        });
+                                    });
 
                                 </script>
 
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
 
-
-</div>
 
 
 </body>
