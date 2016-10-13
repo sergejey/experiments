@@ -313,6 +313,9 @@
                                     var camera = new THREE.PerspectiveCamera( 75, 369/300, 0.1, 1000 );
                                     var default_camera = new THREE.PerspectiveCamera( 75, 369/300, 0.1, 1000 );
 
+                                    var cubeObject = new THREE.Mesh( new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshNormalMaterial() );
+                                    cubeObject.position.y = 150;
+
                                     var renderer	= new THREE.WebGLRenderer({
                                         antialias	: true,
                                         alpha		: true,
@@ -332,9 +335,13 @@
                                             function ( result ) {
                                                 loaded = result;
                                                 scene = loaded.scene;
+
+                                                scene.add( cubeObject );
+
                                                 for (var obj in loaded.objects ) {
                                                     objects.push(loaded.objects[obj]);
                                                 }
+
                                                 if (loaded.currentCamera) {
 
                                                     loaded.currentCamera.aspect = 369/300;
@@ -342,6 +349,7 @@
                                                     default_camera=loaded.currentCamera;
                                                     camera = default_camera.clone();
                                                 }
+
 
                                             }
                                     );
@@ -395,9 +403,12 @@
                                     var jsArucoMarker	= new THREEx.JsArucoMarker();
 
                                     // init the image source grabbing
-                                    if( location.hash === '#video' ){
+                                    if( location.hash === '#video' ) {
                                         var videoGrabbing = new THREEx.VideoGrabbing();
                                         jsArucoMarker.videoScaleDown = 2;
+                                    } else if ( location.hash === '#image') {
+                                        var videoGrabbing = new THREEx.ImageGrabbing()
+                                        jsArucoMarker.videoScaleDown = 10
                                     }else {
                                         jsArucoMarker.videoScaleDown = 2;
                                         var videoGrabbing = new THREEx.WebcamGrabbing();
@@ -409,25 +420,32 @@
                                     onRenderFcts.push(function(){
                                         var domElement	= videoGrabbing.domElement;
                                         var markers	= jsArucoMarker.detectMarkers(domElement);
-                                        var object3d	= camera;
+                                        var object3d	= cubeObject;
                                         //object3d.visible = false;
                                         // see if this.markerId has been found
                                         markers.forEach(function(marker){
                                             // if( marker.id !== 265 )	return
-                                            debmes('Marker found');
+                                            status='';
+                                            var marker_object = scene.getObjectByName( "Marker"+marker.id, true );
+                                            if (marker_object.id>0) {
+                                                //debmes('Marker found: '+marker_object.name);
+                                            }
                                             jsArucoMarker.markerToObject3D(marker, object3d);
-                                            //object3d.visible = true;
+                                            status+='Virtual matrix:<br/>'+JSON.stringify(marker_object.matrix)+'<br/>';
+                                            status+='Real matrix:<br/>'+JSON.stringify(object3d.matrix)+'<br/>';
+                                            status+='Camera matrix:<br/>'+JSON.stringify(camera.matrix)+'<br/>';
+                                            debmes(status);
                                         });
                                     });
 
                                     function debmes(message) {
-                                        $('#debugInfo').html(message+'<br/>'+$('#debugInfo').html());
+                                        $('#debugInfo').html(message);
                                     }
 
                                 </script>
 
 
-<div id="debugInfo" style="position:absolute;top:0;left:0;width:300px;height:200px;overflow-y: scroll"></div>
+<div id="debugInfo" style="position:absolute;top:0;left:0;width:100%;height:200px;overflow-y: auto;border:1px solid red;"></div>
 
 </body>
 </html>
