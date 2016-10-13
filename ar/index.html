@@ -393,8 +393,16 @@
                                     */
 
                                     var jsArucoMarker	= new THREEx.JsArucoMarker();
-                                    jsArucoMarker.videoScaleDown = 2;
-                                    var videoGrabbing = new THREEx.WebcamGrabbing();
+
+                                    // init the image source grabbing
+                                    if( location.hash === '#video' ){
+                                        var videoGrabbing = new THREEx.VideoGrabbing();
+                                        jsArucoMarker.videoScaleDown = 2;
+                                    }else {
+                                        jsArucoMarker.videoScaleDown = 2;
+                                        var videoGrabbing = new THREEx.WebcamGrabbing();
+                                    }
+
                                     document.body.appendChild(videoGrabbing.domElement);
 
                                     // process the image source with the marker recognition

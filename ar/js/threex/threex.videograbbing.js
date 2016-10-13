@@ -12,7 +12,7 @@ THREEx.VideoGrabbing = function(){
 	domElement.setAttribute('muted', true)
 	this.domElement = domElement
 
-	domElement.src = 'videos/markerVideo.mp4'
+	domElement.src = './test.mp4'
 
 	domElement.style.zIndex = -1;
         domElement.style.position = 'absolute'
