@@ -327,7 +327,7 @@
 
 
                                     var loader = new THREE.SceneLoader();
-                                    var sceneURL='./scene.json'; //
+                                    var sceneURL='./scene1.json'; //
 
                                     // load a resource
                                     loader.load(
@@ -420,21 +420,60 @@
                                     onRenderFcts.push(function(){
                                         var domElement	= videoGrabbing.domElement;
                                         var markers	= jsArucoMarker.detectMarkers(domElement);
-                                        var object3d	= cubeObject;
+                                        var realObject	= cubeObject;
                                         //object3d.visible = false;
                                         // see if this.markerId has been found
                                         markers.forEach(function(marker){
-                                            // if( marker.id !== 265 )	return
+                                            if( marker.id !== 265 )	return
+
+                                            // MAKING CALCULAION
                                             status='';
+
+                                            // Finding virtual marker object on the scene
                                             var marker_object = scene.getObjectByName( "Marker"+marker.id, true );
-                                            if (marker_object.id>0) {
-                                                //debmes('Marker found: '+marker_object.name);
-                                            }
-                                            jsArucoMarker.markerToObject3D(marker, object3d);
-                                            status+='Virtual matrix:<br/>'+JSON.stringify(marker_object.matrix)+'<br/>';
-                                            status+='Real matrix:<br/>'+JSON.stringify(object3d.matrix)+'<br/>';
-                                            status+='Camera matrix:<br/>'+JSON.stringify(camera.matrix)+'<br/>';
+
+                                            // Decomposiong virtual marker matrix
+                                            var virtual_position = new THREE.Vector3();
+                                            var virtual_quaternion = new THREE.Quaternion();
+                                            var virtual_scale = new THREE.Vector3();
+                                            marker_object.matrixWorld.decompose( virtual_position, virtual_quaternion, virtual_scale );
+
+
+                                            // Converting real marker to 3d object
+                                            jsArucoMarker.markerToObject3D(marker, realObject);
+
+
+                                            status+='position vectors<br/>';
+                                            status+='Real:<br/>'+JSON.stringify(realObject.position)+'<br/>';
+                                            status+='Virtual:<br/>'+JSON.stringify(virtual_position)+'<br/>';
+                                            status+='Camera:<br/>'+JSON.stringify(camera.position)+'<br/>';
+                                            /*
+                                            status+='quaternion<br/>';
+                                            status+='Real:<br/>'+JSON.stringify(realObject.quaternion)+'<br/>';
+                                            status+='Virtual:<br/>'+JSON.stringify(virtual_quaternion)+'<br/>';
+                                            status+='Camera:<br/>'+JSON.stringify(camera.quaternion)+'<br/>';
+
+                                            status+='scale<br/>';
+                                            status+='Real:<br/>'+JSON.stringify(realObject.scale)+'<br/>';
+                                            status+='Virtual:<br/>'+JSON.stringify(virtual_scale)+'<br/>';
+                                            status+='Camera:<br/>'+JSON.stringify(camera.scale)+'<br/>';
+                                            */
+
                                             debmes(status);
+
+                                            camera.position.x=virtual_position.x-realObject.position.x;
+                                            camera.position.y=virtual_position.y-realObject.position.y;
+                                            camera.position.z=virtual_position.z-realObject.position.z;
+
+                                            /*
+                                            camera.quaternion.x=virtual_quaternion.x-realObject.quaternion.x;
+                                            camera.quaternion.y=virtual_quaternion.y-realObject.quaternion.y;
+                                            camera.quaternion.z=virtual_quaternion.z-realObject.quaternion.z;
+                                            */
+
+
+
+
                                         });
                                     });
 
