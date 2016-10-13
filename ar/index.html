@@ -414,15 +414,20 @@
                                         // see if this.markerId has been found
                                         markers.forEach(function(marker){
                                             // if( marker.id !== 265 )	return
+                                            debmes('Marker found');
                                             jsArucoMarker.markerToObject3D(marker, object3d);
                                             //object3d.visible = true;
                                         });
                                     });
 
+                                    function debmes(message) {
+                                        $('#debugInfo').html(message+'<br/>'+$('#debugInfo').html());
+                                    }
+
                                 </script>
 
 
-
+<div id="debugInfo" style="position:absolute;top:0;left:0;width:300px;height:200px;overflow-y: scroll"></div>
 
 </body>
 </html>
