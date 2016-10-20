@@ -47,28 +47,28 @@
       <p>
         Код, отвечающий за преобразование:
 <pre>
-                                            // MAKING CALCULAION
-                                            // Находим маркер в виртуальной сцене
-                                            var marker_object = scene.getObjectByName( "Marker"+marker.id, true );
+// MAKING CALCULAION
+// Находим маркер в виртуальной сцене
+var marker_object = scene.getObjectByName( "Marker"+marker.id, true );
 
-                                            // Раскладываем информацию о виртуальном маркере на вектора
-                                            var virtual_position = new THREE.Vector3();
-                                            var virtual_quaternion = new THREE.Quaternion();
-                                            var virtual_scale = new THREE.Vector3();
-                                            marker_object.matrixWorld.decompose( virtual_position, virtual_quaternion, virtual_scale );
+// Раскладываем информацию о виртуальном маркере на вектора
+var virtual_position = new THREE.Vector3();
+var virtual_quaternion = new THREE.Quaternion();
+var virtual_scale = new THREE.Vector3();
+marker_object.matrixWorld.decompose( virtual_position, virtual_quaternion, virtual_scale );
 
-					                        // Находим маркер в реальности по картинке (записываем информацию в realObject)
-					                        // в реальности функция выглядит вот <a href="http://c2n.me/3Dvailq.png">так</a>
-                                            jsArucoMarker.markerToObject3D(marker, realObject);
+// Находим маркер в реальности по картинке (записываем информацию в realObject)
+// в реальности функция выглядит вот <a href="http://c2n.me/3Dvailq.png">так</a>
+jsArucoMarker.markerToObject3D(marker, realObject);
 
-					                        // Находим коофициент масштаба для разных систем координат
-                                            var markerWidth=(marker_object.geometry.parameters.width);
-                                            var k=markerWidth/realObject.scale.x;
+// Находим коофициент масштаба для разных систем координат
+var markerWidth=(marker_object.geometry.parameters.width);
+var k=markerWidth/realObject.scale.x;
 
-					                        //пытаемся позиционировать камеру :)
-                                            camera.position.x=virtual_position.x-(realObject.position.x*k);
-                                            camera.position.y=virtual_position.y-(realObject.position.y*k);
-                                            camera.position.z=virtual_position.z-(realObject.position.z*k);
+//пытаемся позиционировать камеру :)
+camera.position.x=virtual_position.x-(realObject.position.x*k);
+camera.position.y=virtual_position.y-(realObject.position.y*k);
+camera.position.z=virtual_position.z-(realObject.position.z*k);
     </pre>
       </p>
 
