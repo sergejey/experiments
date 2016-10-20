@@ -22,17 +22,47 @@
       <h3>
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
 
+<h2>Дополненная реальность</h2>
+
+      <p>Суть эксперимента -- вывести картинку с элементами дополненной реальности поверх потока с камеры электронного устройства (телефона, планшета).</p>
+      <p>Для решения задачи используется маркер (реальный и виртуальный). Реальный маркер представляет собой распечатанный символ,
+        который располагается в определённой точке физического пространства (в реальности). Виртуальный же маркер представляет собой
+      объект, расположенный в определённом месте виртуальной сцены.</p>
+      <p><b>Шаг 1.</b> Через камеру мобильного устройства мы получаем картинку и с помощью библиотеки <a href="https://github.com/jeromeetienne/threex.webar">threex</a>
+      определяем координаты и положение маркера в системе координат "КАМЕРА ТЕЛЕФОНА - РЕАЛЬНЫЙ МАРКЕР"</p>
+      <p><b>Шаг 2.</b> Находим координаты и положение виртуального маркера в системе координат виртуальной сцены и на основе полученной на шаге 1 информации,
+      позиционируем виртуальную камеру так, чтобы проекции на экран обоих маркеров (реального и виртуального) совпадали.</p>
+      <p><b>Сделано:</b>
+        Сделана страница, которая загружает виртуальную сцену; скрипт получает координаты реального маркера; скрипт находит маркер в виртуальной сцене.
+      </p>
+      <p><b>Необходимо:</b>
+        Написать алгоритм позиционирования виртуальной камеры.
+      </p>
+      <p>
+        Данные реального маркера в системе координат камеры телефона: вектор позиции (X,Y,Z), вектор поворота (rotation.X,Y,Z), вектор размера (scale.X,Y,Z -- всегда фиксированный = 35)<br/>
+        Данные виртуального маркера в системе координат виртуальной сцены: вектор позиции (X,Y,Z), вектор quaternion (X,Y,Z), размер (для простоты задан так же 35, но может быть любой)
+      </p>
+
+<h3>AR Test 1</h3>
+      <p>
+        <a href="./ar/index1.html#camera">AR camera</a><br/>
+        <a href="./ar/index1.html#image">AR image</a><br/>
+        <a href="./ar/index1.html#video">AR video</a><br/>
+      </p>
+
+<h3>AR Test 2</h3>
 <p>
   <a href="./ar/index.html#camera">AR camera</a><br/>
   <a href="./ar/index.html#image">AR image</a><br/>
   <a href="./ar/index.html#video">AR video</a><br/>
-  [ <a href="http://jeromeetienne.github.io/threex.webar/marker/image-marker-265.html" target="_blank">Marker image</a> ]
-  [ <a href="./ar/image.jpg" target="_blank">Test image</a> ]
-  [ <a href="./ar/test.mp4" target="_blank">Test video</a> ]
-  <br/>
-  <a href="https://github.com/jeromeetienne/threex.webar">Source project</a><br/>
-  <img src="http://api.qrserver.com/v1/create-qr-code/?color=000000&amp;bgcolor=FFFFFF&amp;data=https%3A%2F%2Fsergejey.github.io%2Fexperiments%2Far%2Findex.html&amp;qzone=1&amp;margin=0&amp;size=400x400&amp;ecc=L" alt="qr code" />
 </p>
+      <p>  [ <a href="http://jeromeetienne.github.io/threex.webar/marker/image-marker-265.html" target="_blank">Marker image</a> ]
+        [ <a href="./ar/image.jpg" target="_blank">Test image</a> ]
+        [ <a href="./ar/test.mp4" target="_blank">Test video</a> ]
+        <br/>
+        <a href="https://github.com/jeromeetienne/threex.webar">Source project</a><br/>
+        <img src="http://api.qrserver.com/v1/create-qr-code/?color=000000&amp;bgcolor=FFFFFF&amp;data=https%3A%2F%2Fsergejey.github.io%2Fexperiments%2Far%2Findex.html&amp;qzone=1&amp;margin=0&amp;size=400x400&amp;ecc=L" alt="qr code" />
+      </p>
 
 
       <footer class="site-footer">

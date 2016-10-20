@@ -8,7 +8,7 @@ THREEx.ImageGrabbing = function(){
 
 	var domElement	= document.createElement('img')
 	// TODO make this url tunable
-	domElement.src	= './image.jpg'
+	domElement.src	= './image90.jpg'
 
 	domElement.style.zIndex = -1;
         domElement.style.position = 'absolute'
