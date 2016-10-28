@@ -289,7 +289,7 @@
 
                                     var scene = new THREE.Scene();
 
-                                    var camera	= new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
+                                    var camera  = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
                                     camera.position.z = 220;
 
                                     var cubeObject = new THREE.Mesh( new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshNormalMaterial() );
@@ -408,7 +408,62 @@
                                             var markerWidth=(marker_object.geometry.parameters.width);
                                             var k=markerWidth/realObject.scale.x;
 //console.log(k);
+realObject.updateMatrix();
+//status+=JSON.stringify(realObject.matrix)+'<br/>';
 
+
+var real_position = new THREE.Vector3();
+var real_quaternion = new THREE.Quaternion();
+var real_scale = new THREE.Vector3();
+realObject.matrix.decompose( real_position, real_quaternion, real_scale );
+status+='Real:'+JSON.stringify(real_position)+'<br/>';
+
+var one_scale = new THREE.Vector3();
+
+
+var object_matrix_normalized = new THREE.Matrix4();
+one_scale.x=1;
+one_scale.y=1;
+one_scale.z=1;
+object_matrix_normalized.compose( real_position, real_quaternion, one_scale);
+
+var m1 = new THREE.Matrix4();
+m1.getInverse(object_matrix_normalized);
+
+marker_object.updateMatrix();
+//status+=JSON.stringify(marker_object.matrixWorld)+'<br/>';
+
+var virt_position = new THREE.Vector3();
+var virt_quaternion = new THREE.Quaternion();
+var virt_scale = new THREE.Vector3();
+marker_object.matrixWorld.decompose( virt_position, virt_quaternion, virt_scale );
+status+='Virt:'+JSON.stringify(virt_position)+'<br/>';
+
+
+var m2 = new THREE.Matrix4();
+m2.multiplyMatrices(m1, marker_object.matrixWorld);
+
+//camera.matrixAutoUpdate = false;
+//camera.matrixWorld.set(m2);
+
+var cam_position = new THREE.Vector3();
+var cam_quaternion = new THREE.Quaternion();
+var cam_scale = new THREE.Vector3();
+
+m2.decompose( cam_position, cam_quaternion, cam_scale );
+
+camera.position.x=cam_position.x;
+camera.position.y=cam_position.y;
+camera.position.z=cam_position.z;
+
+
+status+='Cam:'+JSON.stringify(cam_position)+'<br/>';
+
+//status+=JSON.stringify(m2)+'<br/>';
+//camera.position.x=m2.position.x;
+//camera.position.y=m2.position.y;
+
+debmes(status);
 
                                             /*
                                             status+='quaternion<br/>';
@@ -421,18 +476,6 @@
                                             status+='Camera:<br/>'+JSON.stringify(camera.scale)+'<br/>';
                                             */
 
-
-//k=5;
-
-                                            camera.position.x=virtual_position.x-(realObject.position.x*k);
-                                            camera.position.y=virtual_position.y-(realObject.position.y*k);
-                                            camera.position.z=virtual_position.z-(realObject.position.z*k);
-
-                                            status+='position vectors<br/>';
-                                            status+='Real:<br/>'+JSON.stringify(realObject.position)+'<br/>';
-                                            status+='Virtual:<br/>'+JSON.stringify(virtual_position)+'<br/>';
-                                            status+='Camera:<br/>'+JSON.stringify(camera.position)+'<br/>';
-                                            debmes(status);
 
 
                                             //camera.rotation.x=virtual_quaternion.x-realObject.rotation.x;

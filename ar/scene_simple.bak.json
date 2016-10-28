@@ -1,0 +1,58 @@
+{
+	"metadata": {
+		"version": 4.4,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+	"geometries": [
+		{
+			"uuid": "1F335F73-73DF-488B-91CE-05DEB506B28A",
+			"type": "BoxGeometry",
+			"width": 35,
+			"height": 35,
+			"depth": 35,
+			"widthSegments": 1,
+			"heightSegments": 1,
+			"depthSegments": 1
+
+		}],
+	"materials": [
+		{
+			"uuid": "8933BA3E-3823-4DAF-9FBA-90CA26787227",
+			"type": "MeshPhongMaterial",
+			"color": 16777215,
+			"emissive": 0,
+			"specular": 1118481,
+			"shininess": 30,
+			"side": 2,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true,
+			"skinning": false,
+			"morphTargets": false
+		}],
+	"object": {
+		"uuid": "C44DF024-3BFD-4EDC-935A-E31523E2B770",
+		"type": "Scene",
+		"name": "Scene",
+		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+		"children": [
+			{
+				"uuid": "17123B4F-DDE7-44D5-A1D6-F359EAF305FD",
+				"type": "Mesh",
+				"name": "Marker265",
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+				"geometry": "1F335F73-73DF-488B-91CE-05DEB506B28A",
+				"material": "8933BA3E-3823-4DAF-9FBA-90CA26787227"
+			},
+			{
+				"uuid": "5907FA08-C35E-4870-927C-F1DF79E6B3B6",
+				"type": "AmbientLight",
+				"name": "AmbientLight 1",
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,4.541876792907715,5.751054286956787,1],
+				"color": 16777215,
+				"intensity": 1
+			}],
+		"background": 11184810
+	}
+}
