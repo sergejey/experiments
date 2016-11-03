@@ -1,0 +1,56 @@
+{
+	"metadata": {
+		"version": 4.4,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+	"geometries": [
+		{
+			"uuid": "B5D1558A-2C6B-4608-81B6-8F48B7F5EB09",
+			"type": "BoxBufferGeometry",
+			"width": 35,
+			"height": 35,
+			"depth": 35,
+			"widthSegments": 0,
+			"heightSegments": 0,
+			"depthSegments": 0
+		}],
+	"materials": [
+		{
+			"uuid": "30614AE1-67FA-4813-94BF-BCFA213FE0EE",
+			"type": "MeshBasicMaterial",
+			"color": 16777215,
+			"side": 2,
+			"vertexColors": 2,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true,
+			"wireframe": true,
+			"skinning": false,
+			"morphTargets": false
+		}],
+	"object": {
+		"uuid": "C44DF024-3BFD-4EDC-935A-E31523E2B770",
+		"type": "Scene",
+		"name": "Scene",
+		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+		"children": [
+			{
+				"uuid": "5907FA08-C35E-4870-927C-F1DF79E6B3B6",
+				"type": "AmbientLight",
+				"name": "AmbientLight 1",
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,50,29.29606056213379,60,1],
+				"color": 16777215,
+				"intensity": 1
+			},
+			{
+				"uuid": "6E2A5CFB-D3A5-4C3E-8913-A2B36114D8A9",
+				"type": "Mesh",
+				"name": "Marker265",
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+				"geometry": "B5D1558A-2C6B-4608-81B6-8F48B7F5EB09",
+				"material": "30614AE1-67FA-4813-94BF-BCFA213FE0EE"
+			}],
+		"background": 11184810
+	}
+}

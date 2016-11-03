@@ -862,7 +862,7 @@ THREE.SceneLoader.prototype = {
 
                         geoID = geoJSON.uuid;
 
-                        if ( geoJSON.type === "cube"  || geoJSON.type === "BoxGeometry") {
+                        if ( geoJSON.type === "cube"  || geoJSON.type === "BoxGeometry" || geoJSON.type === "BoxBufferGeometry") {
 
                                 geometry = new THREE.BoxGeometry( geoJSON.width, geoJSON.height, geoJSON.depth, geoJSON.widthSegments, geoJSON.heightSegments, geoJSON.depthSegments );
                                 geometry.name = geoID;
@@ -1134,6 +1134,13 @@ THREE.SceneLoader.prototype = {
                          matJSON.parameters=new Object();
                         }
 
+                        for (param in matJSON) {
+                         if (param!='parameters') {
+                          matJSON.parameters[param] = matJSON[param];
+                         }
+                         //alert(param);
+                        }
+
                         for ( parID in matJSON.parameters ) {
 
                                 if ( parID === "envMap" || parID === "map" || parID === "lightMap" || parID === "bumpMap" || parID === "normalMap" || parID === "alphaMap" ) {
@@ -1195,10 +1202,16 @@ THREE.SceneLoader.prototype = {
                                 }
 
                         }
-
+                        /*
                         if (matJSON.color) {
                          matJSON.parameters[ 'color' ]=matJSON.color;
                         }
+                        */
+                        /*
+                        if (matJSON.wireframe) {
+                         matJSON.parameters[ 'wireframe' ]=matJSON.wireframe;
+                        }
+                        */
 
 
                         /*
