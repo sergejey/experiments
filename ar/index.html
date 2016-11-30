@@ -411,7 +411,7 @@
                                     if( location.hash === '#video' ) {
                                         var videoGrabbing = new THREEx.VideoGrabbing();
                                         jsArucoMarker.videoScaleDown = 2;
-                                    } else if ( location.hash === '#image') {
+                                    } else if ( location.hash.startsWith('#image')) {
                                         var videoGrabbing = new THREEx.ImageGrabbing()
                                         jsArucoMarker.videoScaleDown = 10
                                     }else {
