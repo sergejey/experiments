@@ -352,7 +352,7 @@
                                                 }
 
 
-                                                //camera	= new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
+                                                //camera        = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
                                                 //camera.position.z = 2;
 
 
@@ -433,6 +433,8 @@
                                             // MAKING CALCULAION
                                             status='';
 
+// MAKING CALCULAION
+                                            status='';
 
                                             // Finding virtual marker object on the scene
                                             var marker_object = scene.getObjectByName( "Marker"+marker.id, true );
@@ -444,29 +446,82 @@
                                             marker_object.matrixWorld.decompose( virtual_position, virtual_quaternion, virtual_scale );
 
 
-
                                             // Converting real marker to 3d object
                                             jsArucoMarker.markerToObject3D(marker, realObject);
 
+                                            var markerWidth=(marker_object.geometry.parameters.width);
+                                            var k=markerWidth/realObject.scale.x;
+//console.log(k);
+realObject.updateMatrix();
+//status+=JSON.stringify(realObject.matrix)+'<br/>';
 
-                                            status+='position vectors<br/>';
-                                            status+='Real:<br/>'+JSON.stringify(realObject.position)+'<br/>';
-                                            status+='Virtual:<br/>'+JSON.stringify(virtual_position)+'<br/>';
-                                            status+='Camera:<br/>'+JSON.stringify(camera.position)+'<br/>';
 
-                                            /*
-                                            status+='quaternion<br/>';
-                                            status+='Real:<br/>'+JSON.stringify(realObject.quaternion)+'<br/>';
-                                            status+='Virtual:<br/>'+JSON.stringify(virtual_quaternion)+'<br/>';
-                                            status+='Camera:<br/>'+JSON.stringify(camera.quaternion)+'<br/>';
+var real_position = new THREE.Vector3();
+var real_quaternion = new THREE.Quaternion();
+var real_scale = new THREE.Vector3();
+var real_rotation = new THREE.Vector3();
+real_rotation = realObject.rotation;
+realObject.matrix.decompose( real_position, real_quaternion, real_scale );
+status+='Real position:'+JSON.stringify(real_position)+'<br/>';
+//status+='Real rotation:'+JSON.stringify(real_rotation)+'<br/>';
+status+='Real quaternion:'+JSON.stringify(real_quaternion)+'<br/>';
 
-                                            status+='scale<br/>';
-                                            status+='Real:<br/>'+JSON.stringify(realObject.scale)+'<br/>';
-                                            status+='Virtual:<br/>'+JSON.stringify(virtual_scale)+'<br/>';
-                                            status+='Camera:<br/>'+JSON.stringify(camera.scale)+'<br/>';
-                                            */
+var one_scale = new THREE.Vector3();
 
-                                            debmes(status);
+
+var object_matrix_normalized = new THREE.Matrix4();
+one_scale.x=1;
+one_scale.y=1;
+one_scale.z=1;
+object_matrix_normalized.compose( real_position, real_quaternion, one_scale);
+
+var m1 = new THREE.Matrix4();
+m1.getInverse(object_matrix_normalized);
+
+marker_object.updateMatrix();
+//status+=JSON.stringify(marker_object.matrixWorld)+'<br/>';
+
+var virt_position = new THREE.Vector3();
+var virt_quaternion = new THREE.Quaternion();
+var virt_scale = new THREE.Vector3();
+marker_object.matrixWorld.decompose( virt_position, virt_quaternion, virt_scale );
+status+='Virt:'+JSON.stringify(virt_position)+'<br/>';
+
+
+var m2 = new THREE.Matrix4();
+m2.multiplyMatrices(m1, marker_object.matrixWorld);
+
+var cam_position = new THREE.Vector3();
+var cam_quaternion = new THREE.Quaternion();
+var cam_scale = new THREE.Vector3();
+
+m2.decompose( cam_position, cam_quaternion, cam_scale );
+
+camera.matrixAutoUpdate = true;
+//camera.projectionMatrix.set(m2);
+//camera.matrixWorld.set(m2);
+
+
+/*
+camera.position.x=cam_position.x;
+camera.position.y=cam_position.y;
+camera.position.z=cam_position.z;
+*/
+
+camera.position.copy(cam_position);
+camera.quaternion.copy(cam_quaternion);
+//camera.quaternion=cam_quaternion;
+
+
+status+='Cam position:'+JSON.stringify(cam_position)+'<br/>';
+status+='Cam quaternion:'+JSON.stringify(cam_quaternion)+'<br/>';
+
+//status+=JSON.stringify(m2)+'<br/>';
+//camera.position.x=m2.position.x;
+//camera.position.y=m2.position.y;
+
+debmes(status);
+
 
                                         });
                                     });
