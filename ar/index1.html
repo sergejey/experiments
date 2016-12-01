@@ -22,6 +22,7 @@
     <script src='./js/threex/threex.videograbbing.js'></script>
     <script src='./js/threex/threex.jsarucomarker.js'></script>
 
+
 </head>
 
 <style>
@@ -264,6 +265,7 @@
                                 <script language="javascript" src="./js/threejs/libs/tween.min.js"></script>
                                 <script language="javascript" src="./js/threejs/three.min.js"></script>
                                 <script src="./js/threejs/loaders/SceneLoader.js" language="javascript"></script>
+                                <script src='./js/controls/DeviceOrientationControls.js'></script>
                                 <script language="javascript">
 
                                     var container;
@@ -291,6 +293,8 @@
 
                                     var camera  = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
                                     camera.position.z = 220;
+
+                                    controls = new THREE.DeviceOrientationControls( camera );
 
                                     var cubeObject = new THREE.Mesh( new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshNormalMaterial() );
                                     cubeObject.position.y = 150;
@@ -339,6 +343,7 @@
                                             onRenderFct(now, now - previousTime);
                                         });
                                         previousTime    = now
+                                        controls.update();
                                     });
 
 /*
@@ -453,10 +458,10 @@ camera.matrixAutoUpdate = true;
 
 
 camera.position.copy(cam_position);
-camera.quaternion.copy(cam_quaternion);
+//camera.quaternion.copy(cam_quaternion);
 
 status+='Cam position:'+JSON.stringify(cam_position)+'<br/>';
-status+='Cam quaternion:'+JSON.stringify(cam_quaternion)+'<br/>';
+//status+='Cam quaternion:'+JSON.stringify(cam_quaternion)+'<br/>';
 
 debmes(status);
 
