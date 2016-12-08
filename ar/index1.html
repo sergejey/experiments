@@ -412,10 +412,14 @@
                                          status+='Device state: '+device._state.x+'/'+device._state.y+'/'+device._state.z+'<br/>';
                                          status+='Fixed state: '+device._found_state.x+'/'+device._found_state.y+'/'+device._found_state.z+'<br/>';
                                          status+='Fixed rotation: '+device._camera_rotation.x+'/'+device._camera_rotation.y+'/'+device._camera_rotation.z+'<br/>';
+                                         camera.rotation.x=device._camera_rotation.x+(device._state.x-device._found_state.x);
+                                         camera.rotation.y=device._camera_rotation.y+(device._state.y-device._found_state.y);
+                                         camera.rotation.z=device._camera_rotation.z+(device._state.z-device._found_state.z);
+                                         camera.updateProjectionMatrix();
                                          debmes(status);
                                          if (cameraTimerSet!=1) {
                                           cameraTimerSet=1;
-                                          cameraTimer=setTimeout('markerDetectionMode=1;', 5000);
+                                          cameraTimer=setTimeout('markerDetectionMode=1;', 10000);
                                          }
                                          return;
                                         }
