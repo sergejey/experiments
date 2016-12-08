@@ -369,7 +369,8 @@ POS.Posit.prototype.iterate = function(imagePoints, posRotation, posTranslation,
 
     delta = Math.abs(imageDifference - oldImageDifference);
 
-    converged = (0.0 === error.pixels) || (delta < 0.01);
+    //converged = (0.0 === error.pixels) || (delta < 0.01);
+    converged = 0.0;
   }
   
   return error;

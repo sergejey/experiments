@@ -19,7 +19,7 @@ THREEx.JsArucoMarker = function(){
         debugElement.appendChild(canvasElement)
         debugElement.style.position = 'absolute'
         debugElement.style.top = '0px'
-        debugElement.style.left = '0px'
+        debugElement.style.left = '500px'
         debugElement.style.opacity = 0.2
         
         var debugInfoElement    = document.createElement('div')
@@ -106,7 +106,7 @@ THREEx.JsArucoMarker = function(){
          * @param {Object[]} marker   - a found marker
          * @param {THREE.Object3D} object3d - the object3d to move
          */
-        this.markerToObject3D = function(marker, object3d){
+        this.markerToObject3D = function(marker, object3d, focalLength){
                 // convert corners coordinate - not sure why
                 var corners = []//marker.corners;
                 for (var i = 0; i < marker.corners.length; ++ i){
@@ -116,7 +116,8 @@ THREEx.JsArucoMarker = function(){
                         })
                 }
                 // compute the pose from the canvas
-                var posit = new POS.Posit(this.modelSize, canvasElement.width);
+                var posit = new POS.Posit(this.modelSize, focalLength); //canvasElement.width or focalLength //focalLength
+                //alert(canvasElement.width);
                 var pose = posit.pose(corners);
                 // console.assert(pose !== null)
                 if( pose === null )     return;

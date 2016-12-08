@@ -12,7 +12,7 @@
 
     <!-- include js-aruco -->
     <script src='./js/threex/vendor/js-aruco/svd.js'></script>
-    <script src='./js/threex/vendor/js-aruco/posit1-patched.js'></script>
+    <script src='./js/threex/vendor/js-aruco/posit2.js'></script>
     <script src='./js/threex/vendor/js-aruco/cv.js'></script>
     <script src='./js/threex/vendor/js-aruco/aruco.js'></script>
 
@@ -42,7 +42,8 @@
 </style>
 <body bgcolor="transparent" style="margin:0px;padding:0px;background-color:black;">
 
-<div id="body_background"></div>
+<div id="body_background">
+</div>
 <div id="container">
 
     <script type="text/javascript" language="javascript">
@@ -279,7 +280,7 @@
                                     // array of functions for the rendering loop
                                     var onRenderFcts = [];
 
-                                    var container = document.getElementById('canvas_12');
+                                    //var container = document.getElementById('canvas_12');
 
 
                                     var renderer        = new THREE.WebGLRenderer({
@@ -288,6 +289,7 @@
                                     });
                                     renderer.setSize( window.innerWidth, window.innerHeight );
                                     document.body.appendChild( renderer.domElement );
+                                    //container.appendChild( renderer.domElement );
 
                                     var scene = new THREE.Scene();
 
@@ -381,11 +383,18 @@
                                         jsArucoMarker.videoScaleDown = 2;
                                         var videoGrabbing = new THREEx.WebcamGrabbing();
                                     }
+                                    //jsArucoMarker.debugEnabled=true;
 
                                     document.body.appendChild(videoGrabbing.domElement);
 
+
+                                    var focalLength;
+                                    
+                                    //focalLength=screen.width/jsArucoMarker.videoScaleDown;
+
                                     // process the image source with the marker recognition
                                     onRenderFcts.push(function(){
+                                        //focalLength=camera.getFocalLength();
                                         var domElement  = videoGrabbing.domElement;
                                         var markers     = jsArucoMarker.detectMarkers(domElement);
                                         var realObject  = cubeObject;
@@ -396,6 +405,12 @@
 
                                             // MAKING CALCULAION
                                             status='';
+                                            //alert(videoGrabbing.domElement.offsetWidth);
+                                            //camera.aspect   = videoGrabbing.domElement.offsetWidth/ videoGrabbing.domElement.offsetHeight;
+                                            //camera.updateProjectionMatrix();
+                                            focalLength=videoGrabbing.domElement.offsetWidth/jsArucoMarker.videoScaleDown;
+                                            camera.setFocalLength(25);
+                                            
 
                                             // Finding virtual marker object on the scene
                                             var marker_object = scene.getObjectByName( "Marker"+marker.id, true );
@@ -408,10 +423,10 @@
 
 
                                             // Converting real marker to 3d object
-                                            jsArucoMarker.markerToObject3D(marker, realObject);
+                                            jsArucoMarker.markerToObject3D(marker, realObject, focalLength);
                                             realObject.visible = false
 
-                                            //var markerWidth=(marker_object.geometry.parameters.width);
+                                            var markerWidth=(marker_object.geometry.parameters.width);
                                             //var k=markerWidth/realObject.scale.x;
 
 realObject.updateMatrix();
@@ -453,11 +468,15 @@ var cam_scale = new THREE.Vector3();
 m2.decompose( cam_position, cam_quaternion, cam_scale );
 
 camera.matrixAutoUpdate = true;
+camera.updateProjectionMatrix();
 //camera.projectionMatrix.set(m2);
 //camera.matrixWorld.set(m2);
 
 
 camera.position.copy(cam_position);
+//camera.position.x-=markerWidth/2;
+//camera.position.y-=markerWidth/2;
+//camera.position.z-=markerWidth/2;
 camera.quaternion.copy(cam_quaternion);
 
 status+='Cam position:'+JSON.stringify(cam_position)+'<br/>';
