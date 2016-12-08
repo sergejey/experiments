@@ -10,18 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <script type="text/javascript" src="./js/jquery-1.10.2.min.js"></script>
 
-    <!-- include js-aruco -->
-    <script src='./js/threex/vendor/js-aruco/svd.js'></script>
-    <script src='./js/threex/vendor/js-aruco/posit2.js'></script>
-    <script src='./js/threex/vendor/js-aruco/cv.js'></script>
-    <script src='./js/threex/vendor/js-aruco/aruco.js'></script>
-
-    <!-- include some extensions -->
-    <script src='./js/threex/threex.webcamgrabbing.js'></script>
-    <script src='./js/threex/threex.imagegrabbing.js'></script>
-    <script src='./js/threex/threex.videograbbing.js'></script>
-    <script src='./js/threex/threex.jsarucomarker.js'></script>
-
 
 </head>
 
@@ -266,7 +254,20 @@
                                 <script language="javascript" src="./js/threejs/libs/tween.min.js"></script>
                                 <script language="javascript" src="./js/threejs/three.min.js"></script>
                                 <script src="./js/threejs/loaders/SceneLoader.js" language="javascript"></script>
-                                <script src='./js/controls/DeviceOrientationControls.js'></script>
+    <!-- include js-aruco -->
+    <script src='./js/threex/vendor/js-aruco/svd.js'></script>
+    <script src='./js/threex/vendor/js-aruco/posit2.js'></script>
+    <script src='./js/threex/vendor/js-aruco/cv.js'></script>
+    <script src='./js/threex/vendor/js-aruco/aruco.js'></script>
+
+    <!-- include some extensions -->
+    <script src='./js/threex/threex.webcamgrabbing.js'></script>
+    <script src='./js/threex/threex.imagegrabbing.js'></script>
+    <script src='./js/threex/threex.videograbbing.js'></script>
+    <script src='./js/threex/threex.jsarucomarker.js'></script>
+
+    <script src='./js/threex/THREEx.DeviceOrientationState.js'></script>
+
                                 <script language="javascript">
 
                                     var container;
@@ -292,6 +293,9 @@
                                     //container.appendChild( renderer.domElement );
 
                                     var scene = new THREE.Scene();
+
+                                    var device = new THREEx.DeviceOrientationState();
+
 
                                     var camera  = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
                                     camera.position.z = 220;
@@ -388,19 +392,43 @@
                                     document.body.appendChild(videoGrabbing.domElement);
 
 
+                                    var markerDetectionMode=1;
+                                    var cameraTimer;
+                                    var cameraTimerSet=0;
+                                    var positionFound=0;
+
                                     var focalLength;
                                     
                                     //focalLength=screen.width/jsArucoMarker.videoScaleDown;
+                                    //var cameraTimer=setTimeout('markerDetectionMode=0;', 5000);
 
                                     // process the image source with the marker recognition
                                     onRenderFcts.push(function(){
                                         //focalLength=camera.getFocalLength();
+
+                                        if (markerDetectionMode != 1 ) {
+                                         //clearTimeout(cameraTimer);
+                                         status='';
+                                         status+='Device state: '+device._state.x+'/'+device._state.y+'/'+device._state.z+'<br/>';
+                                         status+='Fixed state: '+device._found_state.x+'/'+device._found_state.y+'/'+device._found_state.z+'<br/>';
+                                         status+='Fixed rotation: '+device._camera_rotation.x+'/'+device._camera_rotation.y+'/'+device._camera_rotation.z+'<br/>';
+                                         debmes(status);
+                                         if (cameraTimerSet!=1) {
+                                          cameraTimerSet=1;
+                                          cameraTimer=setTimeout('markerDetectionMode=1;', 5000);
+                                         }
+                                         return;
+                                        }
+
                                         var domElement  = videoGrabbing.domElement;
                                         var markers     = jsArucoMarker.detectMarkers(domElement);
                                         var realObject  = cubeObject;
                                         //object3d.visible = false;
                                         // see if this.markerId has been found
                                         markers.forEach(function(marker){
+
+                                            
+
                                             if( marker.id !== 265 )     return
 
                                             // MAKING CALCULAION
@@ -468,7 +496,6 @@ var cam_scale = new THREE.Vector3();
 m2.decompose( cam_position, cam_quaternion, cam_scale );
 
 camera.matrixAutoUpdate = true;
-camera.updateProjectionMatrix();
 //camera.projectionMatrix.set(m2);
 //camera.matrixWorld.set(m2);
 
@@ -478,6 +505,15 @@ camera.position.copy(cam_position);
 //camera.position.y-=markerWidth/2;
 //camera.position.z-=markerWidth/2;
 camera.quaternion.copy(cam_quaternion);
+camera.updateProjectionMatrix();
+
+positionFound=1;
+device.setState();
+device._camera_rotation.x=camera.rotation.x;
+device._camera_rotation.y=camera.rotation.y;
+device._camera_rotation.z=camera.rotation.z;
+markerDetectionMode=0;
+cameraTimerSet=0;
 
 status+='Cam position:'+JSON.stringify(cam_position)+'<br/>';
 //status+='Cam quaternion:'+JSON.stringify(cam_quaternion)+'<br/>';
