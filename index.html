@@ -34,9 +34,11 @@
       позиционируем виртуальную камеру так, чтобы проекции на экран обоих маркеров (реального и виртуального) совпадали.</p>
       <p><b>Сделано:</b>
         Страница, которая загружает виртуальную сцену; скрипт получает координаты реального маркера; скрипт находит маркер в виртуальной сцене.
+          Камера сцены позиционируется в соответствие с маркером, но не точно (!).
       </p>
       <p><b>Необходимо:</b>
-        Написать алгоритм позиционирования виртуальной камеры.
+        1. Дописать алгоритм позиционирования виртуальной камеры для максимальной точности.<br/>
+        2. Подключить данные от встроенного в мобильный телефон датчика положения, чтобы переключаться на него после корректного определения текущих координат и положения камеры.
       </p>
       <p>
         Данные <b>реального</b> маркера в системе координат камеры телефона:
@@ -54,38 +56,14 @@
       </ul>
       </p>
       <p>Проще всего начать разбираться с <a href="./ar/index1.html#image">базового примера</a>, на котором мы пытаемся совместить реальный и виртуальный маркер</p>
-      <p>
-        Код, отвечающий за преобразование:
-<pre>
-// MAKING CALCULAION
-// Находим маркер в виртуальной сцене
-var marker_object = scene.getObjectByName( "Marker"+marker.id, true );
-
-// Раскладываем информацию о виртуальном маркере на вектора
-var virtual_position = new THREE.Vector3();
-var virtual_quaternion = new THREE.Quaternion();
-var virtual_scale = new THREE.Vector3();
-marker_object.matrixWorld.decompose( virtual_position, virtual_quaternion, virtual_scale );
-
-// Находим маркер в реальности по картинке (записываем информацию в realObject)
-// в реальности функция выглядит вот <a href="http://c2n.me/3Dvailq.png">так</a>
-jsArucoMarker.markerToObject3D(marker, realObject);
-
-// Находим коофициент масштаба для разных систем координат
-var markerWidth=(marker_object.geometry.parameters.width);
-var k=markerWidth/realObject.scale.x;
-
-//пытаемся позиционировать камеру :)
-camera.position.x=virtual_position.x-(realObject.position.x*k);
-camera.position.y=virtual_position.y-(realObject.position.y*k);
-camera.position.z=virtual_position.z-(realObject.position.z*k);
-    </pre>
-      </p>
 
 <h3>AR Test 1</h3>
       <p>
         <a href="./ar/index1.html#camera">AR camera</a><br/>
-        <a href="./ar/index1.html#image">AR image</a><br/>
+        <a href="./ar/index1.html#image">AR image</a>
+        <a href="./ar/index1.html#image2">AR image2</a>
+        <a href="./ar/index1.html#image3">AR image3</a>
+          <br/>
         <a href="./ar/index1.html#video">AR video</a><br/>
       </p>
 
